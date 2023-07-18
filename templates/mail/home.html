@@ -1,0 +1,91 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<style>
+    .form-media label {
+        display: none;
+    }
+</style>
+<div class="py-lg-10 py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-3 fixed">
+                {% include 'includes/menu.html' %}
+            </div>
+            <div class="col-9">
+                <div class="d-flex">
+                    <button type="button" id="single" class="btn mb-3 me-2 ms-auto" onclick="singleMail();" style="height: 55px; background-color: brown; color: #fff;">Single Mail</button>
+                    <button type="button" id="bulk" class="btn mb-3" onclick="bulkMail();" style="height: 55px; background-color: #000; color: #fff;">Bulk Mails</button>
+                </div>
+                <div class="bg-white rounded p-5 shadow">
+                    <form action="/external" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3" id="to">
+                            <input type="text" name="to" class="form-control" placeholder="To">
+                        </div>
+                        <div class="mb-3" id="bcc" style="display: none;">
+                            <label>Upload CSV to bulk mail: </label>
+                            <input type="file" name="upload_csv" class="form-control me-2" placeholder="Bcc">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" name="subject" class="form-control me-2" placeholder="Subject">
+                        </div>
+                        <div class="form-media mb-3">
+                            {{form.media}} {{form}}
+                        </div>
+                        <div class="mb-3 d-flex">
+                            <a href="/" class="btn btn-danger me-2"><i class="bi bi-trash"></i></a>
+                            <!--default html file upload button-->
+                            <input type="file" id="file-upload" name="" onchange="javascript:updateList()" hidden />
+                            <!--our custom file upload button-->
+                            <label for="file-upload" class="me-2 btn btn-danger"><i class="bi bi-paperclip"></i></label>
+                            <button class="btn btn-success me-3"><i class="bi bi-send"></i> Send</button> <div class="me-3 p-2 text-danger" style="font-weight: 600;" id="file-upload-filename"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var input = document.getElementById( 'file-upload' );
+    var infoArea = document.getElementById( 'file-upload-filename' );
+
+    input.addEventListener( 'change', showFileName );
+
+    function showFileName( event ) {
+        // the change event gives us the input it occurred in 
+        var input = event.srcElement;
+        
+        // the input has an array of files in the `files` property, each one has a name that you can use. We're just using the name here.
+        var fileName = input.files[0].name;
+        
+        // use fileName however fits your app best, i.e. add it into a div
+        infoArea.textContent = 'File name: ' + fileName;
+    }
+
+    function singleMail(){
+        document.querySelector('#bcc').style.display = "none";
+        document.querySelector('#to').style.display = "block";
+        document.querySelector('#single').style.backgroundColor = "brown";
+        document.querySelector('#single').style.color = "#fff";
+        document.querySelector('#bulk').style.backgroundColor = "#000";
+        document.querySelector('#bulk').style.color = "#fff";
+        document.querySelector('#csv').style.display = "none";
+
+        document.querySelector('.fr-element').setAttribute('name', 'content');
+    }
+    function bulkMail(){
+        document.querySelector('#to').style.display = "none";
+        document.querySelector('#bcc').style.display = "block";
+        document.querySelector('#single').style.backgroundColor = "#000";
+        document.querySelector('#single').style.color = "#fff";
+        document.querySelector('#bulk').style.backgroundColor = "brown";
+        document.querySelector('#bulk').style.color = "#fff";
+        document.querySelector('#csv').style.display = "block";
+        
+        document.querySelector('.fr-element').setAttribute('name', 'content');
+    }
+
+</script>
+{% endblock %}

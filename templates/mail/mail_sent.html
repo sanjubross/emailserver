@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<style>
+    label {
+        display: none;
+    }
+</style>
+<div class="py-lg-10 py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-3 fixed">
+                {% include 'includes/menu.html' %}
+            </div>
+            <div class="col-9">
+                <div class="bg-dark mb-3 rounded text-center fw-bold" style="padding-top: 16px; padding-bottom: 16px;">
+                    <span class="text-white">View Sent Mails Details</span>
+                </div>
+                <div class="bg-white rounded p-5 shadow">
+                    <div class="mb-4">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div class="text-center border border-dark p-2 rounded" style="background-color: #fffdd0;">
+                        <span class="text-dark" style="font-weight: 600; font-size: 16px;">Weekly Mails Sent:</span>  
+                        <span class="text-danger" style="font-weight: 800; font-size: 20px;">{{totalMail}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+    const xValues = [{% for date in dates %}'{{date}}',{% endfor %}];
+    const yValues = [{% for sentmail in sent %}'{{sentmail}}',{% endfor %}];
+
+    new Chart("myChart", {
+    type: "line",
+    data: {
+        labels: xValues,
+        datasets: [{
+        fill: false,
+        lineTension: 0,
+        backgroundColor: "rgba(0,0,255,1.0)",
+        borderColor: "rgba(0,0,255,0.1)",
+        data: yValues,
+        label: 'Total # of sent mails',
+        }]
+    },
+    options: {
+        legend: {display: false},
+    }
+    });
+</script>
+{% endblock %}
